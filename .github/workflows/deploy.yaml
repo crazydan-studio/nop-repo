@@ -138,7 +138,7 @@ jobs:
               ; find . -type d \( -name '*-demo' -o -name '*-demo2' \) \
               | sed '/\/src\//d; /\/target\//d; s|^\./||g;' \
               \
-              ; echo -e "nop-all-for-spring\nnop-demo/nop-spring-demo-no-orm"
+              ; echo -e "nop-demo/nop-spring-demo-no-orm"
             ) \
             | sed '/nop-report\/nop-report-demo/d; /^tests$/d' \
             | sort | uniq \
