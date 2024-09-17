@@ -127,14 +127,10 @@ jobs:
           ####################################################
           # 收集不需要部署发布包的模块：以 mvn --projects '!webapp' 形式排除指定模块
           ####################################################
-          cd ${GITHUB_WORKSPACE}/code \
-            && mvn -B validate \
-              | grep '/pom.xml'
-          exit 1
           # 获取全部待构建模块
           NOP_MODULES=";$( \
             cd ${GITHUB_WORKSPACE}/code \
-            && mvn -B -o validate \
+            && mvn -B validate \
               | grep '/pom.xml' | awk '{print $NF}' | sed 's|/pom.xml$||g;' \
               | sort | uniq \
               | tr '\n' ';' \
@@ -168,6 +164,7 @@ jobs:
           echo "NOP_MODULES=${NOP_MODULES[@]}"
           echo "NOP_DEPLOY_SKIPPED_MODULES=${NOP_DEPLOY_SKIPPED_MODULES[@]}"
           echo "NOP_IGNORED_MODULES=${NOP_IGNORED_MODULES[@]}"
+
           echo "NOP_IGNORED_MODULES=${NOP_IGNORED_MODULES[@]}" >> ${GITHUB_ENV}
 
       - name: Build Nop packages
