@@ -127,15 +127,18 @@ jobs:
           ####################################################
           # 收集不需要部署发布包的模块：以 mvn --projects '!webapp' 形式排除指定模块
           ####################################################
+          cd ${GITHUB_WORKSPACE}/code \
+            && mvn -B -o -q \
+                exec:exec -Dexec.executable='pwd'
           # 获取全部待构建模块
           NOP_MODULES=";$( \
             cd ${GITHUB_WORKSPACE}/code \
-            && mvn exec:exec -Dexec.executable='pwd' -q \
+            && mvn -B -o -q \
+                exec:exec -Dexec.executable='pwd' \
               | sed "s|^$(pwd)||g;s|^/||g" | sed '/^$/d' \
               | sort | uniq \
               | tr '\n' ';' \
           )"
-          echo "${NOP_MODULES[@]}"
           # 查找部署被忽略的模块
           # https://blog.jdriven.com/2022/11/mastering-maven-exclude-modules-from-build/
           NOP_DEPLOY_SKIPPED_MODULES=(
@@ -162,6 +165,8 @@ jobs:
             fi
           done
 
+          echo "NOP_MODULES=${NOP_MODULES[@]}"
+          echo "NOP_DEPLOY_SKIPPED_MODULES=${NOP_DEPLOY_SKIPPED_MODULES[@]}"
           echo "NOP_IGNORED_MODULES=${NOP_IGNORED_MODULES[@]}"
           echo "NOP_IGNORED_MODULES=${NOP_IGNORED_MODULES[@]}" >> ${GITHUB_ENV}
 
