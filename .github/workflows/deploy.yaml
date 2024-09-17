@@ -140,7 +140,7 @@ jobs:
               \
               ; echo -e "nop-demo/nop-spring-demo-no-orm"
             ) \
-            | sed '/nop-report\/nop-report-demo/d; /^tests$/d' \
+            | sed '/nop-report\/nop-report-demo/d; /^tests$/d; /^nop-all-for-spring$/d' \
             | sort | uniq \
             | tr '\n' ' ' \
           )"
