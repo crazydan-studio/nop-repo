@@ -130,11 +130,12 @@ jobs:
           # 获取全部待构建模块
           NOP_MODULES=";$( \
             cd ${GITHUB_WORKSPACE}/code \
-            && mvn exec:exec -Dexec.executable="pwd" -o -q \
+            && mvn exec:exec -Dexec.executable='pwd' -q \
               | sed "s|^$(pwd)||g;s|^/||g" | sed '/^$/d' \
               | sort | uniq \
               | tr '\n' ';' \
           )"
+          echo "${NOP_MODULES[@]}"
           # 查找部署被忽略的模块
           # https://blog.jdriven.com/2022/11/mastering-maven-exclude-modules-from-build/
           NOP_DEPLOY_SKIPPED_MODULES=(
@@ -161,6 +162,7 @@ jobs:
             fi
           done
 
+          echo "NOP_IGNORED_MODULES=${NOP_IGNORED_MODULES[@]}"
           echo "NOP_IGNORED_MODULES=${NOP_IGNORED_MODULES[@]}" >> ${GITHUB_ENV}
 
       - name: Build Nop packages
