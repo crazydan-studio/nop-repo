@@ -127,25 +127,41 @@ jobs:
           ####################################################
           # 收集不需要部署发布包的模块：以 mvn --projects '!webapp' 形式排除指定模块
           ####################################################
-          # https://blog.jdriven.com/2022/11/mastering-maven-exclude-modules-from-build/
-          # Note: *-codegen 项目不参与部署，但会参与构建
-          NOP_IGNORED_MODULES="$( \
-            ( cd ${GITHUB_WORKSPACE}/code \
-              && grep -rl --include=pom.xml \
-                '<maven.deploy.skip>true</maven.deploy.skip>' . \
-              | sed 's|^\./||g; s|/pom.xml$||g;' \
-              \
-              ; find . -type d \( -name '*-demo' -o -name '*-demo2' \) \
-              | sed '/\/src\//d; /\/target\//d; s|^\./||g;' \
-              \
-              ; echo -e "nop-demo/nop-spring-demo-no-orm"
-            ) \
-            | sed '/nop-report\/nop-report-demo/d; /^tests$/d; /^nop-all-for-spring$/d' \
-            | sort | uniq \
-            | tr '\n' ' ' \
+          # 获取全部待构建模块
+          NOP_MODULES=";$( \
+            cd ${GITHUB_WORKSPACE}/code \
+            && mvn exec:exec -Dexec.executable="pwd" -o -q \
+              | sed "s|^$(pwd)||g;s|^/||g" | sed '/^$/d' \
+              | sort | uniq \
+              | tr '\n' ';' \
           )"
+          # 查找部署被忽略的模块
+          # https://blog.jdriven.com/2022/11/mastering-maven-exclude-modules-from-build/
+          NOP_DEPLOY_SKIPPED_MODULES=(
+            $( \
+              ( cd ${GITHUB_WORKSPACE}/code \
+                && grep -rl --include=pom.xml \
+                  '<maven.deploy.skip>true</maven.deploy.skip>' . \
+                  | sed 's|^\./||g; s|/pom.xml$||g;' \
+                \
+                ; find . -type d \( -name '*-demo' -o -name '*-demo2' \) \
+                | sed '/\/src\//d; /\/target\//d; s|^\./||g;' \
+                \
+                ; echo -e "nop-demo/nop-spring-demo-no-orm"
+              ) \
+              | sed '/nop-report\/nop-report-demo/d;' \
+              | sort | uniq \
+            )
+          )
+          # 从忽略列表中排除掉未被引入的模块
+          NOP_IGNORED_MODULES=( )
+          for m in "${NOP_DEPLOY_SKIPPED_MODULES[@]}"; do
+            if [[ "$(echo $NOP_MODULES | grep ";$m;")" != "" ]]; then
+              NOP_IGNORED_MODULES+=( $m )
+            fi
+          done
 
-          echo "NOP_IGNORED_MODULES=${NOP_IGNORED_MODULES}" >> ${GITHUB_ENV}
+          echo "NOP_IGNORED_MODULES=${NOP_IGNORED_MODULES[@]}" >> ${GITHUB_ENV}
 
       - name: Build Nop packages
         if: ${{ env.NOP_IGNORE_BUILDING != 'true' }}
@@ -154,6 +170,7 @@ jobs:
           rm -rf ${{env.NOP_DIST_TEMP_DIR}}/io/github/entropy-cloud || echo "Ignore"
 
           # 部署构建产物到本地指定目录
+          # Note: *-codegen 项目不参与部署，但会参与构建
           # https://dzone.com/articles/using-github-as-maven-repository
           # https://stackoverflow.com/questions/12435283/adding-a-maven-distribution-repository-on-the-command-line#answer-39439854
           mvn -B \
