@@ -127,13 +127,15 @@ jobs:
           ####################################################
           # 收集不需要部署发布包的模块：以 mvn --projects '!webapp' 形式排除指定模块
           ####################################################
-          mvn -B -o validate
+          cd ${GITHUB_WORKSPACE}/code \
+            && mvn -B -o validate \
+              | grep '/pom.xml'
           exit 1
           # 获取全部待构建模块
           NOP_MODULES=";$( \
             cd ${GITHUB_WORKSPACE}/code \
             && mvn -B -o validate \
-              | grep ' from ' | awk '{print $3}' | sed 's|/pom.xml$||g;/^pom.xml$/d;' \
+              | grep '/pom.xml' | awk '{print $3}' | sed 's|/pom.xml$||g;' \
               | sort | uniq \
               | tr '\n' ';' \
           )"
