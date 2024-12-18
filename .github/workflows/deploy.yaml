@@ -177,7 +177,7 @@ jobs:
           # Note: *-codegen 项目不参与部署，但会参与构建
           # https://dzone.com/articles/using-github-as-maven-repository
           # https://stackoverflow.com/questions/12435283/adding-a-maven-distribution-repository-on-the-command-line#answer-39439854
-          mvn --batch-mode --debug \
+          mvn --batch-mode \
             -DaltDeploymentRepository=internal::default::file://${{env.NOP_DIST_TEMP_DIR}} \
             -DskipTests \
             -Dquarkus.package.type=uber-jar \
