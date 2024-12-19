@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>io.github.entropy-cloud</groupId>
+  <artifactId>nop-extensions</artifactId>
+  <versioning>
+    <lastUpdated>20241219182612</lastUpdated>
+    <snapshot>
+      <timestamp>20241219.182612</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>1.0.0-20241219.182612-1</value>
+        <updated>20241219182612</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+  <version>1.0.0-SNAPSHOT</version>
+</metadata>
