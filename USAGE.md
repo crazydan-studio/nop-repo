@@ -68,14 +68,18 @@
 
 安装后需要清空 IDEA 缓存并重启：`File -> Invalidate Caches...`。
 
-在启动 XLang 调试之前，需要为带静态 `#main` 函数的启动类 `XxxApplication`
-新建一个 `XLang Runner` 类型的 `Run/Debug` 配置：
+该插件可支持对 `main` 函数和单元测试进行 XLang 调试，只需要在运行前选择以
+`XLangDebug` 启动即可：
 
-![](./assets/image/idea-xlang-debug-create-xlang-runner.png)
+![](./assets/image/idea-xlang-debug-junit.png)
 
-然后，选择 `XLangDebug` 以调试模式启动 `XxxApplication`：
+![](./assets/image/idea-xlang-debug-main.png)
 
-![](./assets/image/idea-xlang-debug.png)
+或者直接点击工具栏中的 `XLangDebug` 按钮：
+
+![](./assets/image/idea-xlang-debug-tool-for-junit.png)
+
+![](./assets/image/idea-xlang-debug-tool-for-main.png)
 
 ## Nop Cli 工具使用
 
