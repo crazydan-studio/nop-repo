@@ -24,7 +24,7 @@
 [Nop 源码](https://github.com/entropy-cloud/nop-entropy/)，并托管于
 [Netlify](https://app.netlify.com) 之上：
 
-- 本仓库主站点: https://nop.repo.crazydan.io
+- 本仓库主站点: https://repo.nop.crazydan.io
 - 本仓库备用站点: https://crazydan-studio.github.io/nop-repo
 - 本仓库源码: https://github.com/crazydan-studio/nop-repo
 
@@ -125,7 +125,7 @@ ${JAVA_HOME}/bin/java \
       <repositories>
         <repository>
           <id>nop-repo</id>
-          <url>https://nop.repo.crazydan.io/</url>
+          <url>https://repo.nop.crazydan.io/</url>
           <releases>
             <enabled>true</enabled>
             <updatePolicy>always</updatePolicy>
@@ -147,7 +147,7 @@ ${JAVA_HOME}/bin/java \
         -->
         <pluginRepository>
           <id>nop-repo</id>
-          <url>https://nop.repo.crazydan.io/</url>
+          <url>https://repo.nop.crazydan.io/</url>
           <releases>
             <enabled>true</enabled>
             <updatePolicy>always</updatePolicy>
@@ -178,13 +178,13 @@ ${JAVA_HOME}/bin/java \
   <repositories>
     <repository>
       <id>nop-repo</id>
-      <url>https://nop.repo.crazydan.io/</url>
+      <url>https://repo.nop.crazydan.io/</url>
     </repository>
   </repositories>
   <pluginRepositories>
     <pluginRepository>
       <id>nop-repo</id>
-      <url>https://nop.repo.crazydan.io/</url>
+      <url>https://repo.nop.crazydan.io/</url>
     </pluginRepository>
   </pluginRepositories>
 
