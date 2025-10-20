@@ -49,6 +49,8 @@ jobs:
 
       - name: Prepare environments
         run: |
+          set -x
+
           ####################################################
           # 记录构建信息
           ####################################################
@@ -171,6 +173,8 @@ jobs:
         if: ${{ env.NOP_IGNORE_BUILDING != 'true' }}
         working-directory: code
         run: |
+          set -x
+
           rm -rf ${{env.NOP_DIST_TEMP_DIR}}/io/github/entropy-cloud || echo "Ignore"
 
           # 部署构建产物到本地指定目录
@@ -194,6 +198,8 @@ jobs:
         if: ${{ env.NOP_IGNORE_BUILDING != 'true' }}
         working-directory: code/nop-idea-plugin
         run: |
+          set -x
+
           rm -f ${{env.NOP_DIST_TEMP_DIR}}/nop-idea-plugin-*.zip
 
           bash ./gradlew buildPlugin
@@ -206,6 +212,8 @@ jobs:
         if: ${{ env.NOP_EXTENSIONS_IGNORE_BUILDING != 'true' }}
         working-directory: nop-extensions
         run: |
+          set -x
+
           rm -rf ${{env.NOP_DIST_TEMP_DIR}}/io/github/entropy-cloud/extensions || echo "Ignore"
 
           IGNORED_MODULES="$( \
@@ -233,6 +241,8 @@ jobs:
         if: ${{ env.NOP_ARTIFACTS_NEED_UPDATE == 'true' }}
         working-directory: dist
         run: |
+          set -x
+
           NOP_BUILD_START="${{env.NOP_BUILD_TIMESTAMP}}"
           NOP_BUILD_END="$(date +%s)"
           NOP_BUILD_PERIOD="$(echo "scale=2; ($NOP_BUILD_END - $NOP_BUILD_START) / 60" | bc)"
@@ -268,6 +278,8 @@ jobs:
         working-directory: dist
         # Note：推送至当前仓库，需在仓库配置中启用 Action 的写权限
         run: |
+          set -x
+
           git config user.name "$(git log --format='%an' HEAD^!)"
           git config user.email "$(git log --format='%ae' HEAD^!)"
 
