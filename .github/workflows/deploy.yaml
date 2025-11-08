@@ -196,13 +196,13 @@ jobs:
 
       - name: Build Nop IDEA plugin
         if: ${{ env.NOP_IGNORE_BUILDING != 'true' }}
-        working-directory: code/nop-idea-plugin
+        working-directory: code/nop-dev-tools/nop-idea-plugin
         run: |
           set -x
 
           rm -f ${{env.NOP_DIST_TEMP_DIR}}/nop-idea-plugin-*.zip
 
-          bash ./gradlew buildPlugin
+          bash ./gradlew buildPlugin --info
 
           NOP_IDEA_PLUGIN_NAME="$(basename `ls build/distributions/nop-idea-plugin-*.zip`)"
 
