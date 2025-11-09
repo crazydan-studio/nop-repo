@@ -200,7 +200,10 @@ jobs:
         run: |
           set -x
 
+          PLUGIN_VERSION_SUFFIX="$(date '+%Y%m%d')"
+
           rm -f ${{env.NOP_DIST_TEMP_DIR}}/nop-idea-plugin-*.zip
+          sed -i -r "s|1.0-SNAPSHOT|1.0-${PLUGIN_VERSION_SUFFIX}|g" build.gradle.kts
 
           bash ./gradlew buildPlugin --info
 
