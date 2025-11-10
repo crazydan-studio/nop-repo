@@ -7,9 +7,9 @@
 - 每日构建计划：凌晨 2 点（东八区）
 - 当前构建开始时间：`%build_at%`，构建总耗时 `%build_period%` 分钟
 - 当前 Nop 组件包版本号：`%nop_version%`
-- 当前 Nop 源码变更版本：[%nop_latest_commit%](https://gitee.com/canonical-entropy/nop-entropy/tree/%nop_latest_commit%)
+- 当前 Nop 源码变更版本：[%nop_latest_commit%](https://github.com/entropy-cloud/nop-entropy/tree/%nop_latest_commit%)
 - 额外构建的 Nop 项目如下：
-  - [canonical-entropy/nop-extensions:%nop_extensions_version%](https://gitee.com/canonical-entropy/nop-extensions/tree/%nop_extensions_latest_commit%)
+  - [canonical-entropy/nop-extensions:%nop_extensions_version%](https://github.com/entropy-cloud/nop-extensions/tree/%nop_extensions_latest_commit%)
 
 > - 该仓库仅提供最后一次构建的产物，不保留既往构建产物，不能通过时间戳引入以前的构建版本
 > - 若在构建计划周期内，Nop 源码没有发生更新，则不会再重复构建源码并发布组件包
