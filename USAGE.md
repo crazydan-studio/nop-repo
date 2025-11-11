@@ -66,6 +66,10 @@
 点击齿轮图标，并选择 `Install Plugin from Disk ...`，再选中已下载的插件
 `%idea_plugin_name%` 以将其安装到 IDEA 中。
 
+> 建议从 Jetbrains 市场安装插件 [Nop Entropy](https://plugins.jetbrains.com/plugin/28952-nop-entropy)
+> 以便于后续升级更新。该插件由 [Crazydan Studio](https://studio.crazydan.org/) 团队构建并上传，
+> 其构建代码与官方代码一致，但有关性能和严重缺陷的修复可能会因为 PR 合并延迟而先于官方版本。
+
 安装后需要清空 IDEA 缓存并重启：`File -> Invalidate Caches...`。
 
 该插件可支持对 `main` 函数和单元测试进行 XLang 调试，只需要在运行前选择以
