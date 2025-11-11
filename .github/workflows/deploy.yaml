@@ -175,7 +175,10 @@ jobs:
         run: |
           set -x
 
+          NOP_CLI_VERSION_SUFFIX="$(date '+%Y%m%d')"
+
           rm -rf ${{env.NOP_DIST_TEMP_DIR}}/io/github/entropy-cloud || echo "Ignore"
+          sed -i -r "s|2.0.0-BETA.1|2.0.0-BETA.1-${NOP_CLI_VERSION_SUFFIX}|g" "$(find . -name nop-cli -type d)/pom.xml"
 
           # 部署构建产物到本地指定目录
           # Note: *-codegen 项目不参与部署，但会参与构建
