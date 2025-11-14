@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>io.github.entropy-cloud.extensions</groupId>
+  <artifactId>nop-demo</artifactId>
+  <versioning>
+    <lastUpdated>20251114183759</lastUpdated>
+    <snapshot>
+      <timestamp>20251114.183759</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>1.0.0-20251114.183759-1</value>
+        <updated>20251114183759</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>1.0.0-20251114.183759-1</value>
+        <updated>20251114183759</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <classifier>sources</classifier>
+        <extension>jar</extension>
+        <value>1.0.0-20251114.183759-1</value>
+        <updated>20251114183759</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+  <version>1.0.0-SNAPSHOT</version>
+</metadata>

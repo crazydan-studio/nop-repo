@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.entropy-cloud</groupId>
+        <artifactId>nop-entropy</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>nop-ai</artifactId>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>nop-ai-codegen</module>
+        <module>nop-ai-core</module>
+        <module>nop-ai-llms</module>
+        <module>nop-ai-dsl-orm</module>
+        <module>nop-ai-coder</module>
+        <module>nop-ai-api</module>
+        <module>nop-ai-dao</module>
+        <module>nop-ai-meta</module>
+        <module>nop-ai-service</module>
+        <module>nop-ai-web</module>
+        <module>nop-ai-app</module>
+        <module>nop-ai-mcp-server</module>
+        <module>nop-ai-agent</module>
+        <module>nop-ai-tools</module>
+        <module>nop-ai-skills</module>
+        <module>nop-ai-rag</module>
+    </modules>
+</project>

@@ -2,3 +2,16 @@
 **/_remote.repositories
 **/*.lastUpdated
 **/maven-metadata-local.xml
+io/github/entropy-cloud/nop-auth/nop-auth-app/
+io/github/entropy-cloud/nop-auth/nop-auth-codegen/
+io/github/entropy-cloud/nop-auth/nop-oauth/nop-oauth-app/
+io/github/entropy-cloud/nop-auth/nop-oauth/nop-oauth-codegen/
+io/github/entropy-cloud/nop-benchmark/
+io/github/entropy-cloud/nop-dyn/nop-dyn-codegen/
+io/github/entropy-cloud/nop-file/nop-file-codegen/
+io/github/entropy-cloud/nop-quarkus/
+io/github/entropy-cloud/nop-sys/nop-sys-codegen/
+io/github/entropy-cloud/nop-tcc/nop-tcc-app/
+io/github/entropy-cloud/nop-tcc/nop-tcc-codegen/
+io/github/entropy-cloud/nop-wf/nop-wf-app/
+io/github/entropy-cloud/nop-wf/nop-wf-codegen/

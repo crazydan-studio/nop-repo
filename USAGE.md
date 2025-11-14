@@ -5,11 +5,11 @@
 本仓库当前的构建信息如下：
 
 - 每日构建计划：凌晨 2 点（东八区）
-- 当前构建开始时间：`%build_at%`，构建总耗时 `%build_period%` 分钟
-- 当前 Nop 组件包版本号：`%nop_version%`
-- 当前 Nop 源码变更版本：[%nop_latest_commit%](https://github.com/entropy-cloud/nop-entropy/tree/%nop_latest_commit%)
+- 当前构建开始时间：`2025-11-15 02:24:17 +08:00`，构建总耗时 `13.81` 分钟
+- 当前 Nop 组件包版本号：`2.0.0-SNAPSHOT`
+- 当前 Nop 源码变更版本：[1b58e65423029ae013b15181e35986cc2ee04e6e](https://github.com/entropy-cloud/nop-entropy/tree/1b58e65423029ae013b15181e35986cc2ee04e6e)
 - 额外构建的 Nop 项目如下：
-  - [canonical-entropy/nop-extensions:%nop_extensions_version%](https://github.com/entropy-cloud/nop-extensions/tree/%nop_extensions_latest_commit%)
+  - [canonical-entropy/nop-extensions:1.0.0-SNAPSHOT](https://github.com/entropy-cloud/nop-extensions/tree/adaf4ed60f74037c2bfc2fc96d186049da79a953)
 
 > - 该仓库仅提供最后一次构建的产物，不保留既往构建产物，不能通过时间戳引入以前的构建版本
 > - 若在构建计划周期内，Nop 源码没有发生更新，则不会再重复构建源码并发布组件包
@@ -17,7 +17,19 @@
 注意，以下 Nop 工程模块的构建包未发布至本仓库（这些模块均不会被作为依赖引入到其他项目中）：
 
 ```ignore
-%nop_ignored_modules%
+nop-auth/nop-auth-app
+nop-auth/nop-auth-codegen
+nop-auth/nop-oauth/nop-oauth-app
+nop-auth/nop-oauth/nop-oauth-codegen
+nop-benchmark
+nop-dyn/nop-dyn-codegen
+nop-file/nop-file-codegen
+nop-quarkus
+nop-sys/nop-sys-codegen
+nop-tcc/nop-tcc-app
+nop-tcc/nop-tcc-codegen
+nop-wf/nop-wf-app
+nop-wf/nop-wf-codegen
 ```
 
 本仓库通过 Github Action 自动构建最新的
@@ -61,10 +73,10 @@
 
 ## Nop IDEA 插件安装
 
-点击下载 [%idea_plugin_name%](./%idea_plugin_name%)，
+点击下载 [nop-idea-plugin-1.0-20251114.zip](./nop-idea-plugin-1.0-20251114.zip)，
 完成后，进入 IDEA 的插件管理（`File -> Settings -> Plugins`），
 点击齿轮图标，并选择 `Install Plugin from Disk ...`，再选中已下载的插件
-`%idea_plugin_name%` 以将其安装到 IDEA 中。
+`nop-idea-plugin-1.0-20251114.zip` 以将其安装到 IDEA 中。
 
 > 建议从 Jetbrains 市场安装插件 [Nop Entropy](https://plugins.jetbrains.com/plugin/28952-nop-entropy)
 > 以便于后续升级更新。该插件由 [Crazydan Studio](https://studio.crazydan.org/) 团队构建并上传，
@@ -88,7 +100,7 @@
 ## Nop Cli 工具使用
 
 点击下载
-[%cli_jar_name%](./%cli_jar_path%)，
+[nop-cli-2.0.0-BETA.1-20251114.jar](./io/github/entropy-cloud/nop-cli/2.0.0-BETA.1-20251114/nop-cli-2.0.0-BETA.1-20251114.jar)，
 并在控制台执行相关命令：
 
 ```bash
@@ -97,12 +109,12 @@ export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 
 ${JAVA_HOME}/bin/java \
   -Dfile.encoding=UTF8 \
-  -jar ./%cli_jar_name% \
+  -jar ./nop-cli-2.0.0-BETA.1-20251114.jar \
   gen -t=/nop/templates/orm \
   ./model/nop-demo.orm.xlsx
 ```
 
-> 通过 `${JAVA_HOME}/bin/java -jar ./%cli_jar_name% gen -h`
+> 通过 `${JAVA_HOME}/bin/java -jar ./nop-cli-2.0.0-BETA.1-20251114.jar gen -h`
 > 可查看 `gen` 子命令的详细参数说明。
 > 其中，`-t` 选项所指向的是 Nop 工程中
 > `nop-codegen/src/main/resources/_vfs/nop/templates/orm`
@@ -207,7 +219,7 @@ ${JAVA_HOME}/bin/java \
   <parent>
     <groupId>io.github.entropy-cloud</groupId>
     <artifactId>nop-entropy</artifactId>
-    <version>%nop_version%</version>
+    <version>2.0.0-SNAPSHOT</version>
   </parent>
 
   <!-- ... -->
