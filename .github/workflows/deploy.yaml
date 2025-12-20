@@ -70,13 +70,13 @@ jobs:
           ####################################################
           # 记录版本信息
           ####################################################
-          NOP_VERSION="$(cd ${GITHUB_WORKSPACE}/code && mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          NOP_VERSION="$(cd ${GITHUB_WORKSPACE}/code && xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml)"
           NOP_LATEST_COMMIT="$(cd ${GITHUB_WORKSPACE}/code && git log --format="%H" -n 1)"
 
           echo "NOP_VERSION=${NOP_VERSION}" >> ${GITHUB_ENV}
           echo "NOP_LATEST_COMMIT=${NOP_LATEST_COMMIT}" >> ${GITHUB_ENV}
 
-          NOP_EXTENSIONS_VERSION="$(cd ${GITHUB_WORKSPACE}/nop-extensions && mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          NOP_EXTENSIONS_VERSION="$(cd ${GITHUB_WORKSPACE}/nop-extensions && xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml)"
           NOP_EXTENSIONS_LATEST_COMMIT="$(cd ${GITHUB_WORKSPACE}/nop-extensions && git log --format="%H" -n 1)"
 
           echo "NOP_EXTENSIONS_VERSION=${NOP_EXTENSIONS_VERSION}" >> ${GITHUB_ENV}
