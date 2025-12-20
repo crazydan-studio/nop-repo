@@ -14,6 +14,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Install libxml2-utils (contains xmllint)
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
       # https://github.com/actions/checkout
       - name: Checkout Nop source code
         uses: actions/checkout@v4
@@ -50,8 +53,6 @@ jobs:
       - name: Prepare environments
         run: |
           set -x
-
-          apt -y install libxml2-utils
 
           ####################################################
           # 记录构建信息
