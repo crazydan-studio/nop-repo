@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.entropy-cloud</groupId>
+        <artifactId>nop-stream</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>nop-stream-runtime</artifactId>
+
+    <!-- CEP and connector integration is planned for future releases.
+         Currently runtime depends only on nop-stream-core. -->
+    <dependencies>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-stream-core</artifactId>
+        </dependency>
+
+        <!-- nop-cluster-core: platform discovery (INamingService / AutoRegistration) for node registration (G51) -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-cluster-core</artifactId>
+        </dependency>
+
+        <!-- Stage 39 Phase 2: control-plane cross-JVM RPC over IMessageService
+             (MessageRpcServer / MessageRpcClient / ReflectiveRpcService / RpcServiceProxyFactoryBean) -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-rpc-core</artifactId>
+        </dependency>
+
+        <!-- nop-message-core: LocalMessageService transport. Compile-scope because the
+             control-plane RPC wiring (Stage 39 Phase 2) and RemoteResultPartition/RemoteInputChannel
+             rely on an IMessageService backend at runtime; production deployments inject
+             SysDaoMessageService/PulsarMessageService. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-message-core</artifactId>
+        </dependency>
+
+        <!-- nop-ioc: NopIoC container, used by the Stage 39 Phase 2 RPC beans.xml bootstrap
+             test (production deployment wiring). Test-scope so the IocCoreInitializer does
+             not alter other module tests' CoreInitialization behaviour. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-ioc</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-dao</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-stream-core</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-stream-rocksdb</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Stage 40: Pulsar data-plane backend integration test. Test scope only —
+             production deps remain clean; backend selection is a deployment choice
+             (see stream-data-plane.beans.xml). The SysDao (DB) E2E lives in
+             nop-sys-dao/src/test (mirrors the Stage 38 elector smoke check pattern),
+             avoiding a cyclic test-scope reactor dependency. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-message-pulsar</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Stage 48: Kafka data-plane backend integration test. Test scope only —
+             production deps remain clean; backend selection is a deployment choice
+             (see stream-data-plane.beans.xml). Mirrors the nop-message-pulsar test-scope
+             pattern. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-message-kafka</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Stage 49: FLIP-27 style split-based source reference implementation
+             (FileSource) is in nop-stream-connector. Test scope only — production code
+             that uses the new Source API only needs nop-stream-core. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-stream-connector</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Stage 52: Transactional JDBC sink (two-phase commit) E2E test.
+             Test scope only — production code that uses the JDBC 2PC sink
+             only needs nop-stream-core + nop-dao. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-stream-connector-jdbc</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- Stage 39 Phase 2: nop-ioc is now a test-scope dependency (for the RPC
+                         beans.xml bootstrap test). Its IocCoreInitializer would otherwise load
+                         nop-dao's dao-defaults beans during CoreInitialization in the JDBC tests
+                         (which use their own manual HikariDataSource and don't need the global
+                         IoC container). Cap initialization below IOC to preserve prior behaviour;
+                         TestStreamControlRpcBootstrap builds its own standalone container. -->
+                    <systemPropertyVariables>
+                        <nop.core.initialize.max-initialize-level>4500</nop.core.initialize.max-initialize-level>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
