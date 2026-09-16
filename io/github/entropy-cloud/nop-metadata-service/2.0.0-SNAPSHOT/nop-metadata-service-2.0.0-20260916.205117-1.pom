@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>nop-metadata</artifactId>
+        <groupId>io.github.entropy-cloud</groupId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>nop-metadata-service</artifactId>
+
+    <dependencies>
+        <dependency>
+            <artifactId>nop-metadata-api</artifactId>
+            <groupId>io.github.entropy-cloud</groupId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>nop-metadata-core</artifactId>
+            <groupId>io.github.entropy-cloud</groupId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>nop-metadata-dao</artifactId>
+            <groupId>io.github.entropy-cloud</groupId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+        <!-- W16-impl: api-only 边（与 nop-ai-service 同构）——MetaDataSourceConnectionProcessor
+             单点解析消费 ICredentialProvider；runtime bean 由 nop-credential-service 提供，
+             消费 app 经 app-service.beans.xml 聚合装载。 -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-credential-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-wf-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-wf-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-wf-meta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-wf-service</artifactId>
+        </dependency>
+        <dependency>
+            <artifactId>nop-metadata-codegen</artifactId>
+            <groupId>io.github.entropy-cloud</groupId>
+            <version>2.0.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <artifactId>nop-metadata-meta</artifactId>
+            <groupId>io.github.entropy-cloud</groupId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-biz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-http-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-biz-file-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-ioc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-search-api</artifactId>
+        </dependency>
+        <!-- nop-search-lucene (test scope, P2-35 裁定): main 代码零 lucene import——搜索功能经 io.nop.search.api
+             抽象访问，impl 由运行时 SPI 发现；本依赖仅为搜索测试提供默认 impl。生产部署需要搜索时由宿主应用
+             显式引入 nop-search-lucene 或替换为其他 nop-search-* impl（部署提示见 docs-for-ai/03-modules/nop-metadata.md）。 -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-search-lucene</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- nop-job-api: IJobScheduler / JobSpec / TriggerSpec interfaces for cron scheduling
+             (架构基线 §2.7.3.1 D6). Runtime impl provided by host app via app-local-scheduler.beans.xml. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-job-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-search-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- nop-job-local (test scope): LocalJobScheduler / BeanMethodJobInvoker beans for e2e AutoTest
+             (架构基线 §2.7.3.1 D6). Production runtime supplies the scheduler via host app. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-job-local</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-autotest-junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- mockito-core: 用于 sensitive 列脱敏 / webhook SSRF 等单元测试的 stub 验证
+             (避免实现完整 IOrmEntity/IHttpClient 接口的样板代码) -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
