@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.entropy-cloud</groupId>
+        <artifactId>nop-ai</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>nop-ai-gateway</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-gateway</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-ai-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-ai-core</artifactId>
+        </dependency>
+        <!-- IChannelConnector context carries IAgentEngine + IAgentEventPublisher
+             (transport-layer adapters call into the agent engine). No reverse
+             dependency edge exists: nop-ai-agent does not depend on nop-ai-gateway. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-ai-agent</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-ai-dao</artifactId>
+        </dependency>
+        <!-- Business message layer (W2): IChannelMessageService impl bridges
+             OutboundChannelMessage (nop-integration-api) to the transport-layer
+             ChannelOutboundMessage via UserChannelResolver + ChannelConnectorManager.
+             nop-integration-api depends only on nop-api-core, so this edge
+             introduces no cycle. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-integration-api</artifactId>
+        </dependency>
+        <!-- Scan-login orchestration (W4): IAuthTokenProvider / IUserContextCache
+             / ISessionBootstrap come from nop-biz-auth-core (depends only on
+             nop-api-core/nop-core/nop-biz-auth-api, never on nop-ai-gateway);
+             IChannelBindService comes from nop-auth-api (depends only on
+             nop-api-core). Both edges are acyclic and let the gateway assemble
+             the QR-scan-login callback endpoint without depending on the
+             heavy nop-auth-service. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-biz-auth-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-auth-api</artifactId>
+        </dependency>
+        <!-- Feishu channel (W5-3): FeishuConnector consumes FeishuClient +
+             FeishuCredentials from nop-integration-feishu (which depends only
+             on nop-integration-api → nop-api-core). No reverse edge:
+             nop-integration-feishu does not depend on any nop-ai-* module. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-integration-feishu</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- nop-ai-core's ai-defaults.beans.xml wires ChatServiceImpl with an
+             IHttpClient by type; tests that trigger CoreInitialization (e.g.
+             AiDialectBackendMessageConverterTest) need an IHttpClient bean on
+             the test classpath. nop-http-client-jdk is optional in nop-ai-core,
+             so it must be re-declared here in test scope (mirrors nop-ai-tools). -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-http-client-jdk</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- W6-3 E2E harness (Phase 0 Decision: Candidate B). The genuine
+             UserChannelResolverImpl reads NopAuthExtLogin, whose entity class +
+             ORM model live in nop-auth-dao. Only nop-auth-dao is pulled (test
+             scope) — NOT nop-auth-service, because:
+
+             - Candidate A (full nop-auth-service) was PROVEN to break the
+               existing suite: its auth-service.beans.xml hard-imports
+               /nop/biz/defaults/service-base.beans.xml and nop-biz's
+               biz-defaults.beans.xml registers an ObjDictLoader that queries
+               NopAuthSite at startup; both make AiDialectBackendMessageConverterTest
+               fail (Table NOP_AUTH_SITE not found / missing service-base.beans.xml).
+               Excluding nop-biz/nop-config from auth-service does not help
+               because auth-service.beans.xml itself references those resources.
+             - Candidate B (this) brings the NopAuthExtLogin entity + ORM model
+               only, with no bean definitions that query auth tables at startup,
+               so all 52 existing gateway tests stay green.
+
+             The E2E test (TestChannelProactiveNotifyE2E) assembles a resolver
+             bean that faithfully mirrors UserChannelResolverImpl's production
+             query logic (example: userId + verified=TRUE + delFlag=0, orderBy
+             lastLoginTime DESC, ChannelTypeCodes loginType<->channelType
+             mapping) and really reads NopAuthExtLogin from H2 — real DB
+             reading, not a canned stub. Production runtime still uses the
+             genuine UserChannelResolverImpl (in nop-auth-service, injected by
+             IoC when deployed alongside the gateway). -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-auth-dao</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- W6-4 inbound backbone (mode 2) tests: provides the REAL platform
+             IMessageService implementation (LocalMessageService, bean id
+             nopLocalMessageService) so the backbone unit/E2E/IoC tests
+             exercise the genuine send/subscribe contract rather than a stub.
+             TEST SCOPE ONLY — the gateway module gains NO production-scope
+             dependency. Production deployments that want mode 2 put an
+             IMessageService implementation (nop-message-core / nop-message-kafka
+             / nop-message-pulsar) on their own runtime classpath; it is then
+             injected optionally (ioc:optional) by the container. -->
+        <dependency>
+            <groupId>io.github.entropy-cloud</groupId>
+            <artifactId>nop-message-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- Adding nop-ai-dao (required by ChannelSessionStore) puts
+                         nop-dao's dao-defaults.beans.xml on the test classpath, so
+                         tests that call CoreInitialization.initialize() (e.g.
+                         AiDialectBackendMessageConverterTest) now wire the datasource
+                         beans. Plain CoreInitialization does not read application.yaml,
+                         so the datasource config is supplied here as system properties
+                         (an always-on config source). -->
+                    <systemPropertyVariables>
+                        <nop.datasource.driver-class-name>org.h2.Driver</nop.datasource.driver-class-name>
+                        <nop.datasource.jdbc-url>jdbc:h2:mem:gateway-test</nop.datasource.jdbc-url>
+                        <nop.datasource.username>sa</nop.datasource.username>
+                        <nop.datasource.password></nop.datasource.password>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
